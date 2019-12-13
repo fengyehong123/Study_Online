@@ -13,10 +13,12 @@
     <artifactId>xc-govern-gateway</artifactId>
 
     <dependencies>
+        <!--引入zuul网关的依赖包-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
         </dependency>
+        <!--网关也需要注册到Eureka从而获取各个微服务的地址-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>

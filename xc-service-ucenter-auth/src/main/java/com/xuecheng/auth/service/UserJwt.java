@@ -11,6 +11,7 @@ import java.util.Collection;
 @ToString
 public class UserJwt extends User {
 
+    // 继承了安全框架的User,为其添加了额外的属性
     private String id;
     private String name;
     private String userpic;

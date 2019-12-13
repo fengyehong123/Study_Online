@@ -1,5 +1,6 @@
 package com.xuecheng.auth.service;
 
+import com.xuecheng.auth.client.UserClient;
 import com.xuecheng.framework.domain.ucenter.XcMenu;
 import com.xuecheng.framework.domain.ucenter.ext.XcUserExt;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +24,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     ClientDetailsService clientDetailsService;
+    @Autowired
+    private UserClient userClient;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -41,14 +43,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (StringUtils.isEmpty(username)) {
             return null;
         }
-        XcUserExt userext = new XcUserExt();
-        userext.setUsername("itcast");
-        userext.setPassword(new BCryptPasswordEncoder().encode("123"));
-        userext.setPermissions(new ArrayList<XcMenu>());
-        if(userext == null){
+
+        // 远程请求用户中心,根据账号查询用户信息
+        XcUserExt userext = userClient.getUserext(username);
+        if (userext == null){
+            // 如果返回空,安全框架会认为用户不存在
             return null;
         }
-        //取出正确密码（hash值）
+
+
+        /*XcUserExt userext = new XcUserExt();
+        userext.setUsername("itcast");
+        userext.setPassword(new BCryptPasswordEncoder().encode("123"));*/
+
+        userext.setPermissions(new ArrayList<XcMenu>());  // 权限先用静态的
+
+        // 从数据库取出正确密码（hash值）
         String password = userext.getPassword();
         //这里暂时使用静态密码
 //       String password ="123";
@@ -75,5 +85,3 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userDetails;
     }
 }
-
-// -----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoZ4rw3XHXUh21A7y53/XxHb2ziZVHHjPEQV6Qhz86lBU38mIgNlEHV365P7yYfYZfz2bQtpa0+CJuqBVMB27 m2DbjpKR+LIXSmeu0mBv51TUm40pqYBx1WrU64PQtOuQPtonZrgLeVRG+eSNcl/y 6zELm7pTfjdH116tvAuDvbM+7KrXxODtlyRZjFUgjelxz1IdUy4hi79z0WJwrUar 3nYxPE/HeptpGarcSEztsfqfFidCoLRljiPdectxGiUDpnHxkb7ts2ol/5MDH+vH q3OKXr3OKBG5hLSPIGs9AnpbJfbqBYHrdxM/BfkRP9aam9FZ2jwH0HWCyNw2Lmzm TwIDAQAB-----END PUBLIC KEY-----

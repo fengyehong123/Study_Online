@@ -106,6 +106,20 @@ public class AuthService {
         Map bodyMap = exchange.getBody();
         // 判断申请到的令牌是否有存在为空的情况
         if (bodyMap == null || bodyMap.get("access_token") == null || bodyMap.get("refresh_token") == null || bodyMap.get("jti") == null){
+
+            // 解析安全框架返回的错误信息
+            if (bodyMap != null && bodyMap.get("error_description") != null){
+                // 获取出框架的报错信息进行判断
+                String error_description = (String) bodyMap.get("error_description");
+                if (error_description.indexOf("UserDetailsService returned null") >= 0){
+                    // 抛出账号不存在的异常
+                    ExceptionCast.cast(AuthCode.AUTH_ACCOUNT_NOTEXISTS);
+                } else if (error_description.indexOf("坏的凭证") >= 0){
+                    // 账号或者密码错误
+                    ExceptionCast.cast(AuthCode.AUTH_CREDENTIAL_ERROR);
+                }
+            }
+
             return null;
         }
 
@@ -142,6 +156,33 @@ public class AuthService {
 
         // 如果时间大于0,就代表成功
         return expire > 0;
+    }
+
+    // 把令牌从redis删除
+    public boolean deleteFromRedis(String access_token){
+
+        // 拼接key
+        String key = "user_token:" + access_token;
+        Boolean result = stringRedisTemplate.delete(key);
+
+        return result;
+    }
+
+    // 根据uid从redis中获取jwt令牌,转换为对象
+    public AuthToken getJwtToken(String uid){
+        // 拼接查询的key
+        String key = "user_token:" + uid;
+        // 从redis中获取
+        String jwtJsonStr = stringRedisTemplate.opsForValue().get(key);
+        // 把json字符串转换为对象 指定要转换的对象的类型
+        try {
+            AuthToken authToken = JSON.parseObject(jwtJsonStr, AuthToken.class);
+            return authToken;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
 

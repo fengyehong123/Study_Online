@@ -1,6 +1,7 @@
 server:
   port: 50201
   servlet:
+    # 网关的根路径
     context-path: /api
 spring:
   application:
@@ -15,6 +16,47 @@ spring:
         maxIdle: 3
         minIdle: 1
         maxWait: -1 #连接池最大等行时间 -1没有限制
+
+zuul:
+  routes:
+    manage-course:  # 路由名称,可以随便写,只要保证每一个路由的名称不同即可
+      path: /course/**  # 匹配路由的地址,/api//course/...下面的任意地址都会被匹配到
+      # 指定微服务的名称,凡是/api/course/** 开头的路由,都转发到此微服务
+      serviceId: xc-service-manage-course  # 网关会从eureka中获取该服务名称下的服务实例的地址
+      # url: http://localhost:31200 也可指定url,使用外网的地址
+      strip-prefix: false #true：代理转发时去掉前缀，false:代理转发时不去掉前缀
+      # 默认zuul会屏蔽cookie，cookie不会传到下游服务，这里设置为空则取消默认的黑名单，如果设置了具体的头信息则不会传到下游服务
+      # 敏感头设置，默认会过滤掉cookie 例如设置 uid,则cookie中的uid不会向下传递
+      sensitiveHeaders:
+      # 可以设置过虑的头信息，默认为空表示不过滤任何头,若设置为 Authorization ,则头信息中的 Authorization 部分会被过滤掉
+      # 要获取jwt的令牌,必须要在头部添加 Authorization ,如果被过滤掉,就获取不到jwt的令牌信息
+      ignoredHeaders:
+    xc-service-learning:
+      path: /learning/**
+      serviceId: xc-service-learning #指定服务id，从Eureka中找到服务的ip和端口
+      strip-prefix: false
+      sensitiveHeaders:
+    manage-cms:
+      path: /cms/**
+      serviceId: xc-service-manage-cms
+      strip-prefix: false
+      sensitiveHeaders:
+    manage-sys:
+      path: /sys/**
+      serviceId: xc-service-manage-cms
+      strip-prefix: false
+      sensitiveHeaders:
+    service-ucenter:
+      path: /ucenter/**
+      serviceId: xc-service-ucenter
+      sensitiveHeaders:
+      strip-prefix: false
+    xc-service-manage-order:
+      path: /order/**
+      serviceId: xc-service-manage-order
+      sensitiveHeaders:
+      strip-prefix: false
+
 eureka:
   client:
     registerWithEureka: true #服务注册开关
