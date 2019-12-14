@@ -10,7 +10,6 @@ import com.xuecheng.govern.gateway.service.AuthService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -84,8 +83,6 @@ public class LoginFilter extends ZuulFilter {
 
         return null;
     }
-
-
 
     // 拒绝访问方法
     private void access_denied(){

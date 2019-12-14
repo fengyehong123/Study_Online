@@ -9,5 +9,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CourseInfoMapper {
 
     // 分页助手
+    // 我的课程查询列表
     Page<CourseInfo> findCourseList(CourseListRequest courseListRequest);
 }

@@ -34,6 +34,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
+            <!--之前课程给的包是一个低版本的包,就应该是spring-cloud-starter-openfeign-->
             <!--<artifactId>spring-cloud-starter-feign</artifactId>-->
             <!--根据B站用户的评论修改-->
             <artifactId>spring-cloud-starter-openfeign</artifactId>

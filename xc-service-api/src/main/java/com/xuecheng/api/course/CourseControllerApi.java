@@ -23,11 +23,7 @@ public interface CourseControllerApi {
     public ResponseResult addTeachPlan(Teachplan teachplan);
 
     @ApiOperation("查询我的课程列表")
-    public QueryResponseResult findCourseList(
-            int page,
-            int size,
-            CourseListRequest courseListRequest
-    );
+    public QueryResponseResult<CourseInfo> findCourseList(int page,int size, CourseListRequest courseListRequest);
 
     @ApiOperation("添加课程基础信息")
     public AddCourseResult addCourseBase(CourseBase courseBase);

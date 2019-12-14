@@ -20,7 +20,7 @@ public class ExceptionCatch {
     // 定义map,配置异常类型所对应的错误代码,这个Map是谷歌提供的 数据不可修改且基于线程安全
     private static ImmutableMap<Class<? extends Throwable>,ResultCode> EXCEPTIONS;
     // 定义map的builder对象,去构建 ImmutableMap
-    private static ImmutableMap.Builder<Class<? extends Throwable>,ResultCode> builder = ImmutableMap.builder();
+    protected static ImmutableMap.Builder<Class<? extends Throwable>,ResultCode> builder = ImmutableMap.builder();
 
     // 获取自定义CustomException此类异常
     // @ExceptionHandler 被这个注解标记的类,会自动捕获自定义的异常

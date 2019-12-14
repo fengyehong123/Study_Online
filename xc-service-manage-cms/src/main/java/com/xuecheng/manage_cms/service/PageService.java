@@ -344,7 +344,7 @@ public class PageService {
             ExceptionCast.cast(CmsCode.CMS_GENERATEHTML_DATAURLISNULL);
         }
 
-        // 通过restTemplate来请求dataUrl来获取数据
+        // 通过restTemplate远程调用来请求dataUrl来获取数据
         ResponseEntity<Map> forEntity = restTemplate.getForEntity(dataUrl, Map.class);
         Map body = forEntity.getBody();
 

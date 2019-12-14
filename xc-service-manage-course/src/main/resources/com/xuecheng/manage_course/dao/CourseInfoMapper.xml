@@ -6,13 +6,13 @@
             resultType="com.xuecheng.framework.domain.course.ext.CourseInfo"
             parameterType="com.xuecheng.framework.domain.course.request.CourseListRequest">
       SELECT
-        a.id id,
-        a.name name,
-        b.pic pic
+      course_base.*,
+      (SELECT pic FROM course_pic WHERE courseid = course_base.id) pic
       FROM
-        course_base a,
-        course_pic b
-      WHERE
-        a.id = b.courseid
+      course_base
+      where 1=1
+      <if test="companyId!=null and companyId!=''">
+        and course_base.company_id = #{companyId}
+      </if>
     </select>
 </mapper>

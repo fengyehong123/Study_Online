@@ -162,10 +162,12 @@ public class CourseService {
     }
 
     // 查询我的课程
-    public QueryResponseResult findCourseList(int page, int size, CourseListRequest courseListRequest) {
+    public QueryResponseResult<CourseInfo> findCourseList(String company_id, int page, int size, CourseListRequest courseListRequest) {
         if (courseListRequest == null){
             courseListRequest = new CourseListRequest();
         }
+        // 把公司的company_id设置到查询对象中进行查询
+        courseListRequest.setCompanyId(company_id);
         if (page <= 0){
             page = 1;
         }
@@ -186,11 +188,11 @@ public class CourseService {
         long total = pageInfo.getTotal();
         List<CourseInfo> result = pageInfo.getResult();
 
-        QueryResult queryResult = new QueryResult();
+        QueryResult<CourseInfo> queryResult = new QueryResult<CourseInfo>();
         queryResult.setList(result);
         queryResult.setTotal(total);
 
-        QueryResponseResult queryResponseResult = new QueryResponseResult(CommonCode.SUCCESS,queryResult);
+        QueryResponseResult<CourseInfo> queryResponseResult = new QueryResponseResult<CourseInfo>(CommonCode.SUCCESS,queryResult);
 
         return queryResponseResult;
     }
